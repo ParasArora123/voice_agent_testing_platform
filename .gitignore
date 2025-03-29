@@ -1,0 +1,6 @@
+.env
+config/vonage_private_key.key
+.DS_Store
+.venv/
+venv/
+__pycache__/
