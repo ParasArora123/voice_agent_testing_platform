@@ -1,6 +1,7 @@
 from elevenlabs import ElevenLabs
+from config.config import ELEVENLABS_API_KEY
 
-eleven_labs_client = ElevenLabs(api_key="YOUR_API_KEY",)
+eleven_labs_client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
 def convert_text_to_speech(
         text: str, 

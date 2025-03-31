@@ -1,7 +1,8 @@
+import urllib.parse
+
 from vonage import Auth, Vonage
 from vonage_jwt import JwtClient
 from vonage_voice.models import CreateCallRequest, Phone, ToPhone
-
 from config.config import VONAGE_APPLICATION_ID, VONAGE_PATH_TO_PRIVATE_KEY
 
 def generate_vonage_jwt_token(application_id: str, path_to_private_key: str, paths: dict, claims: dict):
@@ -17,10 +18,13 @@ def generate_vonage_jwt_token(application_id: str, path_to_private_key: str, pat
 
     return jwt_client.generate_application_jwt(full_claims)
 
-def make_outbound_call(to_number: str, from_number: str, answer_url: str):
+def make_outbound_call(to_number: str, from_number: str, answer_url: str, event_url: str, params: dict):
     """
     Make an outbound call to the given number with the given answer URL.
     """
+    answer_url = f"{answer_url}?{urllib.parse.urlencode(params)}"
+    print(f"Answer URL (query params encoded): {answer_url}")
+
     with open(VONAGE_PATH_TO_PRIVATE_KEY, "r") as key_file:
         private_key = key_file.read()
 
@@ -34,6 +38,7 @@ def make_outbound_call(to_number: str, from_number: str, answer_url: str):
     response = client.voice.create_call(
         CreateCallRequest(
             answer_url=[answer_url],
+            event_url=[event_url],
             to=[ToPhone(number=to_number)],
             from_=Phone(number=from_number),
         )

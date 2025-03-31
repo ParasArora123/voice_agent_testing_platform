@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_sock import Sock
 
-from app.routes import main as main_blueprint
-
 sock = Sock()
 
 def create_app():
@@ -10,6 +8,9 @@ def create_app():
 
     # Initialize Sock with the Flask app for the websocket
     sock.init_app(app)
+
+    # We need to wait to import routes until after initializing the app
+    from app.routes import main as main_blueprint
 
     # Register blueprints or import routes
     app.register_blueprint(main_blueprint)
